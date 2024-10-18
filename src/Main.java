@@ -1,48 +1,43 @@
 import java.util.concurrent.Semaphore;
 import java.util.Random;
+import java.util.LinkedList;
+import java.util.Queue;
 
 public class Main {
 
-    // Function to generate exponentially distributed random time
     public static long getExponentialTime(double mean) {
         Random random = new Random();
         double u = random.nextDouble();
         return (long) (-mean * Math.log(1 - u));
     }
 
-    public static void initialize_bus(Semaphore mutex, Semaphore bus, Semaphore boarded, int[] waiting, int index) {
-        new Bus(mutex, bus, boarded, waiting, index).start();
+    public static void initialize_bus(Semaphore mutex, Semaphore bus, Semaphore boarded, Queue<Rider> riderQueue,
+            int index) {
+        new Bus(mutex, bus, boarded, riderQueue, index).start();
     }
 
-    public static void initialize_rider(Semaphore mutex, Semaphore bus, Semaphore boarded, int[] waiting, int index) {
-        new Rider(mutex, bus, boarded, waiting, index).start();
+    public static void initialize_rider(Semaphore mutex, Semaphore bus, Semaphore boarded, Queue<Rider> riderQueue,
+            int index) {
+        Rider rider = new Rider(mutex, bus, boarded, riderQueue, index);
+        rider.start(); // Start the rider thread
     }
 
     public static void main(String[] args) {
-        // Define semaphores and shared variables inside main
-        Semaphore mutex = new Semaphore(1); // Mutual exclusion for shared resource "waiting"
-        Semaphore bus = new Semaphore(0); // Semaphore for the bus arrival
-        Semaphore boarded = new Semaphore(0); // Semaphore to signal when riders have boarded
-        int[] waiting = { 0 }; // Array to allow modification from different threads (mutable container)
+        Semaphore mutex = new Semaphore(1); // Mutual exclusion for shared resource "queue"
+        Semaphore bus_semaphore = new Semaphore(0); // Semaphore for the bus arrival
+        Semaphore boarded_semaphore = new Semaphore(0); // Semaphore to signal when riders have boarded
+        Queue<Rider> riderQueue = new LinkedList<>(); // Regular queue to hold riders waiting for the bus
 
-        // Define means for the exponential distribution in milliseconds
-        // double busMeanInterArrivalTime = 20 * 60 * 1000; // 20 minutes in
-        // milliseconds
-        // double riderMeanInterArrivalTime = 30 * 1000; // 30 seconds in milliseconds
+        double busMeanInterArrivalTime = 20 * 60 * 12; // For testing
+        double riderMeanInterArrivalTime = 30 * 10; // For testing
 
-        // // Timing for testing
-        double busMeanInterArrivalTime = 20 * 60 * 12; // 20 minutes in milliseconds
-        double riderMeanInterArrivalTime = 30 * 10; // 30 seconds in milliseconds
-
-        // Threads for generating buses and riders based on their respective
-        // inter-arrival times
         new Thread(() -> {
             int busIndex = 0;
-            while (busIndex < 5) { // You can change the condition to allow buses to run continuously
+            while (busIndex < 5) {
                 long busArrivalTime = getExponentialTime(busMeanInterArrivalTime);
                 try {
                     Thread.sleep(busArrivalTime); // Bus arrival based on exponential distribution
-                    initialize_bus(mutex, bus, boarded, waiting, busIndex);
+                    initialize_bus(mutex, bus_semaphore, boarded_semaphore, riderQueue, busIndex);
                     busIndex++;
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -52,17 +47,17 @@ public class Main {
 
         new Thread(() -> {
             int riderIndex = 0;
-            while (riderIndex < 150) { // You can change the condition to allow riders to keep arriving
+            while (riderIndex < 150) {
                 long riderArrivalTime = getExponentialTime(riderMeanInterArrivalTime);
                 try {
                     Thread.sleep(riderArrivalTime); // Rider arrival based on exponential distribution
-                    initialize_rider(mutex, bus, boarded, waiting, riderIndex);
+                    initialize_rider(mutex, bus_semaphore, boarded_semaphore, riderQueue, riderIndex);
                     riderIndex++;
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
         }).start();
-
     }
+
 }
