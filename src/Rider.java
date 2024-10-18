@@ -12,7 +12,7 @@ public class Rider extends Thread {
         this.bus = bus;
         this.boarded = boarded;
         this.waiting = waiting;
-        this.index =index;
+        this.index = index;
     }
 
     @Override
@@ -27,7 +27,7 @@ public class Rider extends Thread {
             // Wait for a bus to signal that it is ready for boarding
             bus.acquire();
             board();
-            boarded.release();  // Signal that the rider has boarded the bus
+            boarded.release(); // Signal that the rider has boarded the bus
 
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -35,6 +35,6 @@ public class Rider extends Thread {
     }
 
     private void board() {
-        System.out.println(index+1 + " Rider boards the bus.");
+        System.out.println(index + 1 + " Rider boards the bus.");s
     }
 }
