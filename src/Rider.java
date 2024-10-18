@@ -1,4 +1,5 @@
 import java.util.concurrent.Semaphore;
+import java.util.Random;
 
 public class Rider extends Thread {
     private Semaphore mutex;
@@ -6,6 +7,7 @@ public class Rider extends Thread {
     private Semaphore boarded;
     private int[] waiting;
     private int index;
+    Random random = new Random();
 
     public Rider(Semaphore mutex, Semaphore bus, Semaphore boarded, int[] waiting, int index) {
         this.mutex = mutex;
@@ -26,7 +28,7 @@ public class Rider extends Thread {
 
             // Wait for a bus to signal that it is ready for boarding
             bus.acquire();
-            board();
+            board(random);
             boarded.release(); // Signal that the rider has boarded the bus
 
         } catch (InterruptedException e) {
@@ -34,7 +36,9 @@ public class Rider extends Thread {
         }
     }
 
-    private void board() {
-        System.out.println(index + 1 + " Rider boards the bus.");s
+    private void board(Random random) throws InterruptedException {
+        int randomTime = 800 + random.nextInt(401);
+        Thread.sleep(randomTime);
+        System.out.println(index + 1 + " Rider boards the bus.");
     }
 }
