@@ -1,4 +1,5 @@
 import java.util.concurrent.Semaphore;
+import java.util.Random;
 
 public class Main {
 
@@ -21,27 +22,31 @@ public class Main {
     }
 
     public static void main(String[] args) {
+
+        Random random = new Random();
+
         // Define semaphores and shared variables inside main
         Semaphore mutex = new Semaphore(1);     // Mutual exclusion for shared resource "waiting"
         Semaphore bus = new Semaphore(0);       // Semaphore for the bus arrival
         Semaphore boarded = new Semaphore(0);   // Semaphore to signal when riders have boarded
         int[] waiting = {0};  // Array to allow modification from different threads (mutable container)
 
-        // Start Bus threads (simulate buses arriving at different intervals)
-        for (int i = 0; i < 2; i++) {  // Simulate 3 buses arriving
-            initialize_bus(mutex, bus, boarded, waiting, i);
+        int busIndex = 0;
+        int riderIndex = 0;
+
+
+        // start rider or bus thread randomly
+        while (busIndex < 5 && riderIndex < 150) {
+            int random_var = (random.nextInt(51) == 0 ? 1 : 0);
+            // System.out.println("Random: " + random_var);
+            if (random_var == 0) {
+                initialize_rider(mutex, bus, boarded, waiting, riderIndex);
+                riderIndex++;
+            } else {
+                initialize_bus(mutex, bus, boarded, waiting, busIndex);
+                busIndex++;
+            }
         }
 
-
-        // Start Rider threads
-        for (int i = 0; i < 49; i++) {  // 100 riders
-            initialize_rider(mutex, bus, boarded, waiting, i);
-        }
-
-
-        // Start Bus threads (simulate buses arriving at different intervals)
-        for (int i = 0; i < 5; i++) {  // Simulate 3 buses arriving
-            initialize_bus(mutex, bus, boarded, waiting, i);
-        }
     }
 }
