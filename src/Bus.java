@@ -25,7 +25,7 @@ public class Bus extends Thread {
             // Calculate how many riders can board, max capacity is 50
             int n = Math.min(waiting[0], BUS_CAPACITY);
             System.out.println();
-            System.out.println(index+1 + " Bus arrives, riders waiting: " + waiting[0] + ", allowing " + n + " to board.");
+            System.out.println(" Bus " + (index+1) + " arrives, riders waiting: " + waiting[0] + ", allowing " + n + " to board.");
 
             // Signal riders to board the bus
             for (int i = 0; i < n; i++) {
