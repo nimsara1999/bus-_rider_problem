@@ -23,9 +23,13 @@ public class Bus extends Thread {
             mutex.acquire();
 
             // Calculate how many riders can board, max capacity is 50
-            int n = Math.min(waiting[0], BUS_CAPACITY);
-            System.out.println();
-            System.out.println(" Bus " + (index+1) + " arrives, riders waiting: " + waiting[0] + ", allowing " + n + " to board.");
+            int n;
+            if (waiting[0] < BUS_CAPACITY) {
+                n = waiting[0];
+            } else {
+                n = BUS_CAPACITY;
+            }
+            System.out.println("\nBus " + (index+1) + " arrives, riders waiting: " + waiting[0] + ", allowing " + n + " to board.");
 
             // Signal riders to board the bus
             for (int i = 0; i < n; i++) {
@@ -54,6 +58,6 @@ public class Bus extends Thread {
     }
 
     private void depart() {
-        System.out.println("Bus departs.");
+        System.out.println("Bus departs.\n");
     }
 }
