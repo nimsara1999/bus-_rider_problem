@@ -23,16 +23,16 @@ public class Bus extends Thread {
             mutex.acquire();
 
             // Calculate how many riders can board, max capacity is 50
-            int n;
+            int number_of_riders_selected_to_board_bus;
             if (waiting[0] < BUS_CAPACITY) {
-                n = waiting[0];
+                number_of_riders_selected_to_board_bus = waiting[0];
             } else {
-                n = BUS_CAPACITY;
+                number_of_riders_selected_to_board_bus = BUS_CAPACITY;
             }
-            System.out.println("\nBus " + (index+1) + " arrives, riders waiting: " + waiting[0] + ", allowing " + n + " to board.");
+            System.out.println("\nBus " + (index+1) + " arrives, riders waiting: " + waiting[0] + ", allowing " + number_of_riders_selected_to_board_bus + " to board.");
 
             // Signal riders to board the bus
-            for (int i = 0; i < n; i++) {
+            for (int i = 0; i < number_of_riders_selected_to_board_bus; i++) {
                 bus.release();  // Signal to a rider that they can board
             }
 
@@ -40,7 +40,7 @@ public class Bus extends Thread {
             mutex.release();
 
             // Wait for all signaled riders to board
-            for (int i = 0; i < n; i++) {
+            for (int i = 0; i < number_of_riders_selected_to_board_bus; i++) {
                 boarded.acquire();  // Wait until each rider signals that they have boarded
             }
 
