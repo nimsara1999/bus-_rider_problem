@@ -47,7 +47,7 @@ public class Bus extends Thread {
 
             // After all riders have boarded, adjust the number of waiting riders
             mutex.acquire();
-            waiting[0] = Math.max(waiting[0] - BUS_CAPACITY, 0); // Update waiting riders
+            waiting[0] = Math.max(waiting[0] - number_of_riders_selected_to_board_bus, 0); // Update waiting riders
             mutex.release();
 
             // The bus can now depart
