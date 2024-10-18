@@ -26,12 +26,13 @@ public class Main {
         int[] waiting = { 0 }; // Array to allow modification from different threads (mutable container)
 
         // Define means for the exponential distribution in milliseconds
-        double busMeanInterArrivalTime = 20 * 60 * 1000; // 20 minutes in milliseconds
-        double riderMeanInterArrivalTime = 30 * 1000; // 30 seconds in milliseconds
+        // double busMeanInterArrivalTime = 20 * 60 * 1000; // 20 minutes in
+        // milliseconds
+        // double riderMeanInterArrivalTime = 30 * 1000; // 30 seconds in milliseconds
 
         // // Timing for testing
-        // double busMeanInterArrivalTime = 20 * 60 * 14; // 20 minutes in milliseconds
-        // double riderMeanInterArrivalTime = 30 * 10; // 30 seconds in milliseconds
+        double busMeanInterArrivalTime = 20 * 60 * 12; // 20 minutes in milliseconds
+        double riderMeanInterArrivalTime = 30 * 10; // 30 seconds in milliseconds
 
         // Threads for generating buses and riders based on their respective
         // inter-arrival times
